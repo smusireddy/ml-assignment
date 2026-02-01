@@ -133,10 +133,13 @@ sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
 st.pyplot(fig)
 
 # ---------------------------------------------------------
-# Classification Report
+# Clean Classification Report (Table Format)
 # ---------------------------------------------------------
-st.header("📄 Classification Report")
-st.text(classification_report(y_test, y_pred))
+st.header("📄 Classification Report (Formatted)")
+report = classification_report(y_test, y_pred, output_dict=True)
+report_df = pd.DataFrame(report).transpose()
+st.dataframe(report_df)
+
 
 # ---------------------------------------------------------
 # Prediction on Uploaded Test Data

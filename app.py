@@ -37,6 +37,37 @@ and generate **confusion matrix / classification report**.
 st.header("📁 Upload Test Dataset (CSV)")
 uploaded_file = st.file_uploader("Upload your test CSV file", type=["csv"])
 
+# ---------------------------------------------------------
+# Direct Train/Test Split on Full DataFrame
+# ---------------------------------------------------------
+st.header("🔀 Train/Test Split")
+
+test_size = st.slider("Select Test Size", 0.1, 0.4, 0.2)
+
+train_df, test_df = train_test_split(
+    df,
+    test_size=test_size,
+    random_state=42,
+    stratify=df["Churn"]   # use your target column here
+)
+
+st.success(f"Dataset successfully split! Test size: {test_size*100:.0f}%")
+
+# ---------------------------------------------------------
+# Download Test Data
+# ---------------------------------------------------------
+st.subheader("📥 Download Test Dataset")
+
+test_csv = test_df.to_csv(index=False).encode("utf-8")
+
+st.download_button(
+    label="⬇️ Download Test CSV",
+    data=test_csv,
+    file_name="test_dataset.csv",
+    mime="text/csv"
+)
+
+
 
 # ---------------------------------------------------------
 # Load Main Training Dataset (from GitHub)
@@ -83,27 +114,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
-
-# ---------------------------------------------------------
-# Download Test Dataset Only
-# ---------------------------------------------------------
-st.subheader("📥 Download Test Dataset")
-
-# Combine X_test and y_test into one DataFrame
-test_df = pd.DataFrame(X_test)
-test_df['target'] = y_test.values
-
-# Convert to CSV
-test_csv = test_df.to_csv(index=False).encode("utf-8")
-
-# Download button
-st.download_button(
-    label="⬇️ Download Test CSV",
-    data=test_csv,
-    file_name="test_dataset.csv",
-    mime="text/csv"
-)
-
 
 # ---------------------------------------------------------
 # ML Models

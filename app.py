@@ -29,11 +29,14 @@ Upload your **test dataset**, choose a **model**, view **evaluation metrics**,
 and generate **confusion matrix / classification report**.
 """)
 
+
+
 # ---------------------------------------------------------
 # Dataset Upload Section
 # ---------------------------------------------------------
 st.header("📁 Upload Test Dataset (CSV)")
 uploaded_file = st.file_uploader("Upload your test CSV file", type=["csv"])
+
 
 # ---------------------------------------------------------
 # Load Main Training Dataset (from GitHub)
@@ -80,6 +83,27 @@ X_train, X_test, y_train, y_test = train_test_split(
 scaler = StandardScaler()
 X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
+
+# ---------------------------------------------------------
+# Download Test Dataset Only
+# ---------------------------------------------------------
+st.subheader("📥 Download Test Dataset")
+
+# Combine X_test and y_test into one DataFrame
+test_df = pd.DataFrame(X_test)
+test_df['target'] = y_test.values
+
+# Convert to CSV
+test_csv = test_df.to_csv(index=False).encode("utf-8")
+
+# Download button
+st.download_button(
+    label="⬇️ Download Test CSV",
+    data=test_csv,
+    file_name="test_dataset.csv",
+    mime="text/csv"
+)
+
 
 # ---------------------------------------------------------
 # ML Models

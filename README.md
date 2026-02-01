@@ -60,3 +60,15 @@ https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 | **Random Forest (Ensemble)**    | 0.796309  | 0.662921  | 0.473262  | 0.552262  | 0.435259  |
 | **XGBoost (Ensemble)**          | 0.784954  | 0.607903  | 0.534759  | 0.568990  | 0.428064  |
 
+
+## 📌 Model Performance Analysis
+
+| **ML Model**                        | **Observation About Performance** |
+|------------------------------------|-----------------------------------|
+| **Logistic Regression**            | Good overall accuracy; strong precision but low recall, meaning it predicts churners conservatively and misses many actual churn cases. |
+| **Decision Tree Classifier**       | Balanced performance; better recall than Logistic Regression but slightly less stable due to overfitting tendencies. |
+| **K‑Nearest Neighbor Classifier**  | Moderate accuracy; struggles with recall, indicating difficulty identifying churners in high‑dimensional encoded data. |
+| **Naive Bayes (Gaussian)**         | Lowest accuracy but **highest recall**, meaning it catches most churners but produces many false positives. Useful when missing churners is costly. |
+| **Random Forest (Ensemble)**       | Best overall performer; highest accuracy and strong balance across metrics, showing robustness and good generalization. |
+| **XGBoost (Ensemble)**             | Competitive performance; strong F1 and MCC scores, indicating reliable predictions and good handling of complex patterns. |
+

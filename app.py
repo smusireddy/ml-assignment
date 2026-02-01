@@ -23,6 +23,12 @@ from xgboost import XGBClassifier
 # Streamlit App Title
 # ---------------------------------------------------------
 st.title("📊 Telco Customer Churn Prediction – ML App")
+# ---------------------------------------------------------
+# Student Information
+# ---------------------------------------------------------
+st.markdown("### 🧑‍🎓 Student Information")
+st.write("**BITS ID:** 2025AA05571")
+st.write("**Full Name:** SURESH BABU MUSIREDDY")
 
 st.write("""
 Upload your **test dataset**, choose a **model**, view **evaluation metrics**,  

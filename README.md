@@ -48,3 +48,15 @@ https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 - F1 Score  
 - MCC Score  
 
+
+## 📊 Model Performance Comparison
+
+| Model                           | Accuracy  | Precision | Recall    | F1 Score  | MCC Score |
+|---------------------------------|-----------|-----------|-----------|-----------|-----------|
+| **Logistic Regression**         | 0.784244  | 0.721519  | 0.304813  | 0.428571  | 0.367070  |
+| **Decision Tree Classifier**    | 0.774308  | 0.589172  | 0.494652  | 0.537791  | 0.392603  |
+| **KNN Classifier**              | 0.760823  | 0.573705  | 0.385027  | 0.460800  | 0.325025  |
+| **Naive Bayes (Gaussian)**      | 0.614620  | 0.400236  | 0.906417  | 0.555283  | 0.374772  |
+| **Random Forest (Ensemble)**    | 0.796309  | 0.662921  | 0.473262  | 0.552262  | 0.435259  |
+| **XGBoost (Ensemble)**          | 0.784954  | 0.607903  | 0.534759  | 0.568990  | 0.428064  |
+

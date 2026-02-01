@@ -69,6 +69,6 @@ https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 | **Decision Tree Classifier**       | Balanced performance; better recall than Logistic Regression but slightly less stable due to overfitting tendencies. |
 | **K‑Nearest Neighbor Classifier**  | Moderate accuracy; struggles with recall, indicating difficulty identifying churners in high‑dimensional encoded data. |
 | **Naive Bayes (Gaussian)**         | Lowest accuracy but **highest recall**, meaning it catches most churners but produces many false positives. Useful when missing churners is costly. |
-| **Random Forest (Ensemble)**       | Best overall performer; highest accuracy and strong balance across metrics, showing robustness and good generalization. |
+| **Random Forest (Ensemble)**       | **Best overall performer; highest accuracy and strong balance across metrics, showing robustness and good generalization.** |
 | **XGBoost (Ensemble)**             | Competitive performance; strong F1 and MCC scores, indicating reliable predictions and good handling of complex patterns. |
 

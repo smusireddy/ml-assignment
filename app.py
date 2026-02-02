@@ -78,27 +78,20 @@ df_processed = preprocess_data(df)
 # ---------------------------------------------------------
 # Train/Test Split
 # ---------------------------------------------------------
-# ---------------------------------------------------------
-# Direct Train/Test Split on Full DataFrame
-# ---------------------------------------------------------
-st.header("🔀 Train/Test Split")
 
-test_size = st.slider("Select Test Size", 0.1, 0.4, 0.2)
-
-train_df, test_df = train_test_split(
-    df,
-    test_size=test_size,
-    random_state=42,
-    stratify=df["Churn"]   # use your target column here
-)
-
-st.success(f"Dataset successfully split for download only! Test size: {test_size*100:.0f}%")
-
-
-# ---------------------------------------------------------
-# Separate Block for Download (Does NOT refresh whole page)
-# ---------------------------------------------------------
 with st.container():
+    st.header("🔀 Train/Test Split")
+
+    test_size = st.slider("Select Test Size", 0.1, 0.4, 0.2)
+    
+    train_df, test_df = train_test_split(
+        df,
+        test_size=test_size,
+        random_state=42,
+        stratify=df["Churn"]   # use your target column here
+    )
+    
+    st.success(f"Dataset successfully split for download only! Test size: {test_size*100:.0f}%")
     st.subheader("📥 Download Test Dataset")
 
     test_csv = test_df.to_csv(index=False).encode("utf-8")

@@ -92,21 +92,25 @@ train_df, test_df = train_test_split(
     stratify=df["Churn"]   # use your target column here
 )
 
-st.success(f"Dataset successfully split! Test size: {test_size*100:.0f}%")
+st.success(f"Dataset successfully split for download only! Test size: {test_size*100:.0f}%")
+
 
 # ---------------------------------------------------------
-# Download Test Data
+# Separate Block for Download (Does NOT refresh whole page)
 # ---------------------------------------------------------
-st.subheader("📥 Download Test Dataset")
+with st.container():
+    st.subheader("📥 Download Test Dataset")
 
-test_csv = test_df.to_csv(index=False).encode("utf-8")
+    test_csv = test_df.to_csv(index=False).encode("utf-8")
 
-st.download_button(
-    label="⬇️ Download Test CSV",
-    data=test_csv,
-    file_name="test_dataset.csv",
-    mime="text/csv"
-)
+    st.download_button(
+        label="⬇️ Download Test CSV",
+        data=test_csv,
+        file_name="test_dataset.csv",
+        mime="text/csv",
+        key="download_test_csv"   # prevents rerun issues
+    )
+
 
 
 

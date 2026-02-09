@@ -71,17 +71,23 @@ df = load_training_data()
 def preprocess_data(df):
     df = df.copy()
 
-    # Convert TotalCharges to numeric
+    # Fix TotalCharges
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
     df["TotalCharges"].fillna(df["TotalCharges"].median(), inplace=True)
 
-    # Encode target
-    df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
+    # Encode target if present
+    if "Churn" in df.columns:
+        df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
 
-    # One-hot encode categorical variables
-    df = pd.get_dummies(df, drop_first=True)
+    # Label encode categorical columns
+    from sklearn.preprocessing import LabelEncoder
+    le = LabelEncoder()
+
+    for col in df.select_dtypes(include=["object"]).columns:
+        df[col] = le.fit_transform(df[col])
 
     return df
+
 
 df_processed = preprocess_data(df)
 

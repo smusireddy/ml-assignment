@@ -12,15 +12,12 @@ from sklearn.metrics import (
     classification_report
 )
 
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
 import joblib
 import pickle
 
+# ---------------------------------------------------------
+# Helper functions to load models
+# ---------------------------------------------------------
 def load_pickle(path):
     with open(path, "rb") as f:
         return pickle.load(f)
@@ -28,13 +25,17 @@ def load_pickle(path):
 def load_joblib(path):
     return joblib.load(path)
 
-# Load saved scaler
+# ---------------------------------------------------------
+# Load saved scaler + extract expected feature names
+# ---------------------------------------------------------
 scaler = joblib.load("model/scaler.pkl")
+scaler_features = list(scaler.feature_names_in_)
 
 # ---------------------------------------------------------
 # Streamlit App Title
 # ---------------------------------------------------------
 st.title("📊 Telco Customer Churn Prediction – ML App")
+
 # ---------------------------------------------------------
 # Student Information
 # ---------------------------------------------------------
@@ -47,14 +48,11 @@ Upload your **test dataset**, choose a **model**, view **evaluation metrics**,
 and generate **confusion matrix / classification report**.
 """)
 
-
-
 # ---------------------------------------------------------
 # Dataset Upload Section
 # ---------------------------------------------------------
 st.header("📁 Upload Test Dataset (CSV)")
 uploaded_file = st.file_uploader("Upload your test CSV file", type=["csv"])
-
 
 # ---------------------------------------------------------
 # Load Main Training Dataset (from GitHub)
@@ -73,15 +71,12 @@ df = load_training_data()
 def preprocess_data(df):
     df = df.copy()
 
-    # Fix TotalCharges
     df["TotalCharges"] = pd.to_numeric(df["TotalCharges"], errors="coerce")
     df["TotalCharges"].fillna(df["TotalCharges"].median(), inplace=True)
 
-    # Encode target if present
     if "Churn" in df.columns:
         df["Churn"] = df["Churn"].map({"Yes": 1, "No": 0})
 
-    # Label encode categorical columns
     from sklearn.preprocessing import LabelEncoder
     le = LabelEncoder()
 
@@ -90,13 +85,11 @@ def preprocess_data(df):
 
     return df
 
-
 df_processed = preprocess_data(df)
 
 # ---------------------------------------------------------
 # Train/Test Split
 # ---------------------------------------------------------
-
 with st.container():
     st.header("🔀 Train/Test Split")
 
@@ -106,7 +99,7 @@ with st.container():
         df,
         test_size=test_size,
         random_state=42,
-        stratify=df["Churn"]   # use your target column here
+        stratify=df["Churn"]
     )
     
     st.success(f"Dataset successfully split for download only! Test size: {test_size*100:.0f}%")
@@ -119,11 +112,8 @@ with st.container():
         data=test_csv,
         file_name="test_dataset.csv",
         mime="text/csv",
-        key="download_test_csv"   # prevents rerun issues
+        key="download_test_csv"
     )
-
-
-
 
 X = df_processed.drop("Churn", axis=1)
 y = df_processed["Churn"]
@@ -132,12 +122,18 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
 
-# Scale numerical features
+# ---------------------------------------------------------
+# Align X_test with scaler's expected features
+# ---------------------------------------------------------
+for col in scaler_features:
+    if col not in X_test.columns:
+        X_test[col] = 0
+
+X_test = X_test[scaler_features]
 X_test_scaled = scaler.transform(X_test)
 
-
 # ---------------------------------------------------------
-# ML Models
+# Load ML Models
 # ---------------------------------------------------------
 models = {
     "Logistic Regression": load_pickle("model/logistic_regression.pkl"),
@@ -147,7 +143,6 @@ models = {
     "Ensemble Model - Random Forest (Optimized)": load_joblib("model/random_forest.pkl"),
     "Ensemble Model - XGBoost": load_pickle("model/xgboost.pkl")
 }
-
 
 # ---------------------------------------------------------
 # Model Selection
@@ -163,15 +158,15 @@ st.header("📊 Evaluation Metrics")
 
 y_pred = model.predict(X_test_scaled)
 
-accuracy = accuracy_score(y_test, y_pred)
-precision = precision_score(y_test, y_pred)
-recall = recall_score(y_test, y_pred)
-f1 = f1_score(y_test, y_pred)
-mcc = matthews_corrcoef(y_test, y_pred)
-
 metrics_df = pd.DataFrame({
     "Metric": ["Accuracy", "Precision", "Recall", "F1 Score", "MCC Score"],
-    "Score": [accuracy, precision, recall, f1, mcc]
+    "Score": [
+        accuracy_score(y_test, y_pred),
+        precision_score(y_test, y_pred),
+        recall_score(y_test, y_pred),
+        f1_score(y_test, y_pred),
+        matthews_corrcoef(y_test, y_pred)
+    ]
 })
 
 st.dataframe(metrics_df)
@@ -187,13 +182,11 @@ sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", ax=ax)
 st.pyplot(fig)
 
 # ---------------------------------------------------------
-# Clean Classification Report (Table Format)
+# Classification Report
 # ---------------------------------------------------------
 st.header("📄 Classification Report (Formatted)")
-report = classification_report(y_test, y_pred, output_dict=True)
-report_df = pd.DataFrame(report).transpose()
+report_df = pd.DataFrame(classification_report(y_test, y_pred, output_dict=True)).transpose()
 st.dataframe(report_df)
-
 
 # ---------------------------------------------------------
 # Prediction on Uploaded Test Data
@@ -205,20 +198,16 @@ if uploaded_file is not None:
     st.write("### Uploaded Test Data Preview")
     st.dataframe(test_df.head())
 
-    # Preprocess uploaded test data
     test_processed = preprocess_data(test_df)
 
-    # Align columns with training data
-    missing_cols = set(X_train.columns) - set(test_processed.columns)
-    for col in missing_cols:
-        test_processed[col] = 0
+    # Align with scaler features
+    for col in scaler_features:
+        if col not in test_processed.columns:
+            test_processed[col] = 0
 
-    test_processed = test_processed[X_train.columns]
-
-    # Scale
+    test_processed = test_processed[scaler_features]
     test_scaled = scaler.transform(test_processed)
 
-    # Predict
     predictions = model.predict(test_scaled)
     test_df["Churn Prediction"] = predictions
 

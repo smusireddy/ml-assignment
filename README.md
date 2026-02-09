@@ -73,24 +73,5 @@ https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 | **XGBoost (Ensemble)**             | Competitive performance; strong F1 and MCC scores, indicating reliable predictions and good handling of complex patterns. |
 
 
-📦 telco-churn-prediction/
-│
-├── app.py                         # Streamlit application (final deployed app)
-├── requirements.txt               # Python dependencies for Streamlit Cloud
-├── README.md                      # Project documentation
-│
-├── model/                         # Saved ML models + scaler
-│   ├── logistic_regression.pkl
-│   ├── decision_tree.pkl
-│   ├── knn.pkl
-│   ├── naive_bayes.pkl
-│   ├── random_forest.pkl          # Optimized Random Forest (joblib)
-│   ├── xgboost.pkl
-│   ├── scaler.pkl                 # Saved StandardScaler (critical for inference)
-│   ├── logistic_regression.py
-│   ├── decision_tree.py
-│   ├── knn.py
-│   ├── naive_bayes.py
-│   ├── random_forest.py
-│   ├── xgboost.py
+<img width="886" height="543" alt="image" src="https://github.com/user-attachments/assets/ce00bc22-09b2-4f60-be35-4ecdd9075586" />
 

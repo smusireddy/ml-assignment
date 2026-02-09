@@ -18,6 +18,16 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
+import joblib
+import pickle
+
+def load_pickle(path):
+    with open(path, "rb") as f:
+        return pickle.load(f)
+
+def load_joblib(path):
+    return joblib.load(path)
+
 
 # ---------------------------------------------------------
 # Streamlit App Title
@@ -123,22 +133,21 @@ X_test_scaled = scaler.transform(X_test)
 # ML Models
 # ---------------------------------------------------------
 models = {
-    "Logistic Regression": LogisticRegression(max_iter=200),
-    "Decision Tree Classifier": DecisionTreeClassifier(),
-    "K-Nearest Neighbor Classifier": KNeighborsClassifier(),
-    "Naive Bayes Classifier - Gaussian": GaussianNB(),
-    "Ensemble Model - Random Forest": RandomForestClassifier(),
-    "Ensemble Model - XGBoost": XGBClassifier(eval_metric="logloss")
+    "Logistic Regression": load_pickle("model/logistic_regression.pkl"),
+    "Decision Tree Classifier": load_pickle("model/decision_tree.pkl"),
+    "K-Nearest Neighbor Classifier": load_pickle("model/knn.pkl"),
+    "Naive Bayes Classifier - Gaussian": load_pickle("model/naive_bayes.pkl"),
+    "Ensemble Model - Random Forest (Optimized)": load_joblib("model/random_forest.pkl"),
+    "Ensemble Model - XGBoost": load_pickle("model/xgboost.pkl")
 }
+
 
 # ---------------------------------------------------------
 # Model Selection
 # ---------------------------------------------------------
 st.header("🤖 Select a Machine Learning Model")
 model_choice = st.selectbox("Choose a model", list(models.keys()))
-
 model = models[model_choice]
-model.fit(X_train_scaled, y_train)
 
 # ---------------------------------------------------------
 # Evaluation Metrics

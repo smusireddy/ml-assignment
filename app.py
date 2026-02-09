@@ -28,6 +28,8 @@ def load_pickle(path):
 def load_joblib(path):
     return joblib.load(path)
 
+# Load saved scaler
+scaler = joblib.load("model/scaler.pkl")
 
 # ---------------------------------------------------------
 # Streamlit App Title
@@ -131,9 +133,8 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Scale numerical features
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
+
 
 # ---------------------------------------------------------
 # ML Models

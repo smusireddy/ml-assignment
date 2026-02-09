@@ -72,3 +72,25 @@ https://www.kaggle.com/datasets/blastchar/telco-customer-churn
 | **Random Forest (Ensemble)**       | **Best overall performer; highest accuracy and strong balance across metrics, showing robustness and good generalization.** |
 | **XGBoost (Ensemble)**             | Competitive performance; strong F1 and MCC scores, indicating reliable predictions and good handling of complex patterns. |
 
+
+📦 telco-churn-prediction/
+│
+├── app.py                         # Streamlit application (final deployed app)
+├── requirements.txt               # Python dependencies for Streamlit Cloud
+├── README.md                      # Project documentation
+│
+├── model/                         # Saved ML models + scaler
+│   ├── logistic_regression.pkl
+│   ├── decision_tree.pkl
+│   ├── knn.pkl
+│   ├── naive_bayes.pkl
+│   ├── random_forest.pkl          # Optimized Random Forest (joblib)
+│   ├── xgboost.pkl
+│   ├── scaler.pkl                 # Saved StandardScaler (critical for inference)
+│   ├── logistic_regression.py
+│   ├── decision_tree.py
+│   ├── knn.py
+│   ├── naive_bayes.py
+│   ├── random_forest.py
+│   ├── xgboost.py
+
